@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MTCG.Handlers {
 
-namespace MTCG.Handlers
-{
     // All paths need to implement the handler interface
-    class IHandler
-    {
+    internal interface IHandler {
+
         /// <summary>
         /// processes task
         /// </summary>

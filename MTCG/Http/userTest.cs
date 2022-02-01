@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Server
+namespace MTCG.Http
 {
-    class HttpRequest
+    class userTest
     {
+        public string Username{ get; set;}
+        public string Password { get; set; }
     }
 }

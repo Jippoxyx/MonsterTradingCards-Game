@@ -8,28 +8,30 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MTCG.Http
-{
-    class HttpServer
-    {
+namespace MTCG.Http {
+    class HttpServer {
         protected int port;
         TcpListener listener;
 
-        public HttpServer(int port)
-        {
+        public HttpServer(int port) {
             this.port = port;
+            listener = new TcpListener(IPAddress.Loopback, port);
         }
 
-        public void Run()
-        {
-            listener = new TcpListener(IPAddress.Loopback, port);
+        public void Run() {
+            
             listener.Start(5);
-            while (true)
-            {
-                TcpClient s = listener.AcceptTcpClient();
-                HttpProcessor processor = new HttpProcessor(s, this);
-                new Thread(processor.Process).Start();
-                Thread.Sleep(1);
+            Console.WriteLine("Press Escape to quit");
+
+            while (true) {
+                
+                if (listener.Pending()) {
+                    TcpClient s = listener.AcceptTcpClient();
+                    HttpProcessor processor = new(s, this);
+                    new Thread(processor.Process).Start();
+                    Thread.Sleep(1);
+                }
+
             }
         }
     }
