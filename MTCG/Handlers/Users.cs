@@ -1,4 +1,5 @@
 ﻿using MTCG.Http;
+using MTCG.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,27 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MTCG.Handlers {
-    public class Users : HandlerBase<string>, IHandler {
+    public class Users : HandlerBase<string>
+    {
         private readonly string content;
 
-        public Users(string content) : base(content) {
+        public Users(string content) : base(content)
+        {
             this.content = content;
         }
 
-        public string Handle() {
+        public override HttpResponse POST()
+        {
             // TODO db stuff
-            var deserializeObj = JsonSerializer.Deserialize<userTest>(content);
-            return "DB stuff happened";
+            // "{\"Username\"\"":\"kienboec\", \"Password\":\"daniel\"}"          
+            UserModel userObj = JsonSerializer.Deserialize<UserModel>(content);
+            //databasemanager(userObj);
+
+            HttpResponse res = new HttpResponse();
+            res.StatusCode = (int)HttpStatusCode.bad;
+            return res;
         }
+        
     }
 }
+
