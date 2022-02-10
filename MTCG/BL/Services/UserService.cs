@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Model
+namespace MTCG.BL.Services
 {
-    class UserModel
+    class UserService
     {
-        public string Username{ get; set;}
-        public string Password { get; set; }     
     }
 }

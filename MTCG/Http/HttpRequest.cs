@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTCG.Handlers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,16 +7,23 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using Npgsql;
+using MTCG.DAL.Database;
+using MTCG.DAL.Access;
+
 namespace MTCG.Http
 {
     class HttpRequest
     {
         public string Method { get;  set; }
         public string Path { get;  set; }
-        public string Version { get;  set; }
-
+        public string Version { get; set; }
         public Dictionary<string, string> Headers { get; }
 
+        public HttpRequest()
+        {
+            Headers = new Dictionary<string, string>();
+        }
 
         public HttpResponse ProcessContent(StreamReader reader)
         {
@@ -27,8 +35,25 @@ namespace MTCG.Http
             // Execute process Member of called type (for instance: users)
             Type pathClass = getPathOfRequest();
             HttpResponse resp = new HttpResponse();
+
+            /*
             if (pathClass != null)
-                resp.Content = (string)getMethodOfType(pathClass, Method).Invoke(Activator.CreateInstance(pathClass, content_string), null);
+                resp = (HttpResponse)getMethodOfType(pathClass, Method).Invoke(Activator.CreateInstance(pathClass, content_string), null);
+            //error catch wenn path nicht existiert 
+            else
+            {
+                res.Content = null;
+                resp.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+            
+
+            resp.StatusCode = (int)HttpStatusCode.BadRequest;           
+            */   
+            
+
+            Users use = new Users(content_string);         
+            resp = use.POST();
+
             //ERROR HANDLING
             return resp;
         }
@@ -43,6 +68,11 @@ namespace MTCG.Http
         {
             // interface IHandler enforces Handle
             return type.GetMethod(nameof(method));
+        }
+
+        public void AddHeaders(string key, string value)
+        {
+            Headers.Add(key, value);
         }
     }
 }

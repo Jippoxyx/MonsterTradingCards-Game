@@ -1,4 +1,5 @@
-﻿using MTCG.Http;
+﻿using MTCG.DAL.Database;
+using MTCG.Http;
 using System;
 
 namespace MTCG
@@ -6,7 +7,7 @@ namespace MTCG
     class Program
     {
         static void Main(string[] args)
-        {
+        {   
             HttpServer newServer = new HttpServer(10001);
             newServer.Run();
         }

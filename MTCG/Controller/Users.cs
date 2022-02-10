@@ -1,5 +1,7 @@
-﻿using MTCG.Http;
+﻿using MTCG.DAL.Access;
+using MTCG.Http;
 using MTCG.Model;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MTCG.Handlers {
-    public class Users : HandlerBase<string>
+    class Users : ControllerBase<string>
     {
         private readonly string content;
 
@@ -18,18 +20,29 @@ namespace MTCG.Handlers {
             this.content = content;
         }
 
+        //Registration
         public override HttpResponse POST()
         {
-            // TODO db stuff
+            UserAccess user = new UserAccess();
+            HttpResponse res = new HttpResponse();
+
             // "{\"Username\"\"":\"kienboec\", \"Password\":\"daniel\"}"          
             UserModel userObj = JsonSerializer.Deserialize<UserModel>(content);
-            //databasemanager(userObj);
 
-            HttpResponse res = new HttpResponse();
-            res.StatusCode = (int)HttpStatusCode.bad;
+            try
+            {
+                user.InsertUser(userObj);
+            }
+            catch (PostgresException)
+            {
+                Console.WriteLine("Username already exist");
+
+            }
+
+            res.StatusCode = (int)HttpStatusCode.OK;
+            res.Content = "New User created";
             return res;
-        }
-        
+        }       
     }
 }
 

@@ -21,10 +21,6 @@ namespace MTCG.Http
         {
             this.socket = s;
             this.httpServer = httpServer;
-            /*
-            Method = null;
-            Headers = new();
-            */
         }
 
         public void Process()
@@ -35,7 +31,6 @@ namespace MTCG.Http
             HttpResponse res = new HttpResponse();
             Console.WriteLine();
             
-
             // read (and handle) the full HTTP-request
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -56,11 +51,11 @@ namespace MTCG.Http
                 else
                 {
                     var parts = line.Split(' ');
-                    req.Headers.Add(parts[0].TrimEnd(':'), parts[1]);
+                    req.AddHeaders(parts[0].TrimEnd(':'), parts[1]);                       
+                    res.StatusCode = (int)HttpStatusCode.BadRequest; 
                 }
             }
 
-            //schaun ob content length existiert - wenn ja -> body exist -> mit stream reade
             if (req.Headers.ContainsKey("Content-Length"))
             {
                 string contentLength;
@@ -71,7 +66,7 @@ namespace MTCG.Http
                     res  = req.ProcessContent(reader);
                 //ERROR HANDLING
             }
-
+          
          res.sendResponse(writer);
         }  
     }

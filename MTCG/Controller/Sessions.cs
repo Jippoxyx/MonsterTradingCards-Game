@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.DAL.Repository
+namespace MTCG.Handlers
 {
-    interface IRepository
+    class Sessions
     {
     }
 }
