@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.BL.Services
+namespace MTCG.Endpoints
 {
-    class UserService
+    class Cards
     {
     }
 }

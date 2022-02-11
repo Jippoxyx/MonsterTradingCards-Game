@@ -1,4 +1,4 @@
-﻿using static MTCG.Http.HttpServer;
+﻿using static MTCG.Http.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,11 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace MTCG.Http {
-    class HttpServer {
+    class Server {
         protected int port;
         TcpListener listener;
 
-        public HttpServer(int port) {
+        public Server(int port) {
             this.port = port;
             listener = new TcpListener(IPAddress.Loopback, port);
         }
@@ -27,7 +27,7 @@ namespace MTCG.Http {
                 
                 if (listener.Pending()) {
                     TcpClient s = listener.AcceptTcpClient();
-                    HttpProcessor processor = new(s, this);
+                    Processor processor = new(s, this);
                     new Thread(processor.Process).Start();
                     Thread.Sleep(1);
                 }

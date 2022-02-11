@@ -12,11 +12,14 @@ namespace MTCG.Http
     {
         OK = 200,      
         Created = 201,
-        NotFound = 404,
-        BadRequest = 400
+        NoContent = 204,
+        BadRequest = 400,
+        Unauthorized = 401,
+        Forbidden = 403,
+        NotFound = 404
     }
 
-    class HttpResponse
+    class Response
     {
         public Dictionary<string, string> Headers { get; set; }
         public int StatusCode{ get; set; }
@@ -29,7 +32,6 @@ namespace MTCG.Http
             WriteLine(writer, $"Current Time: {DateTime.Now}");
             WriteLine(writer,"Server: MCTG Server");
 
-            //if((string.IsNullOrEmpty(Content)))
             if(Content != null)
             {
                 WriteLine(writer, $"Content-Length: {Content.Length}");

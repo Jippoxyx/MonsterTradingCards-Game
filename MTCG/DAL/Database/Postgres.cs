@@ -5,12 +5,11 @@ namespace MTCG.DAL.Database
 {
     class Postgres
     {
-        public NpgsqlConnection conn;
-        private string connString = "Host = localhost; Username = postgres; Password = 0000; Database = mtcg; Port = 5432"; 
+        public NpgsqlConnection conn;       
         
         public NpgsqlConnection CreateConnection()
         {           
-            conn = new NpgsqlConnection(connString);
+            conn = new NpgsqlConnection("Host = localhost; Username = postgres; Password = 0000; Database = mtcg; Port = 5432");
             conn.Open();
             if (conn.State == System.Data.ConnectionState.Open)
             {
@@ -28,7 +27,7 @@ namespace MTCG.DAL.Database
         public NpgsqlConnection GetConnection()
         {
             return CreateConnection();
-        }
+        }     
     }
 }
 

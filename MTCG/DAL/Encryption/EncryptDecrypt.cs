@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MTCG.DAL.Encryption
 {
-    public static class EncryptDecrypt
+    public class EncryptDecrypt
     {
-        private static byte[] key = new byte[8] { 1, 2, 3, 4, 5, 6, 7, 8 };
-        private static byte[] iv = new byte[8] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        private  byte[] key = new byte[8] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        private  byte[] iv = new byte[8] { 1, 2, 3, 4, 5, 6, 7, 8 };
 
-        public static string Crypt(this string text)
+        public string Crypt(string text)
         {
             SymmetricAlgorithm algorithm = DES.Create();
             ICryptoTransform transform = algorithm.CreateEncryptor(key, iv);
@@ -21,7 +21,7 @@ namespace MTCG.DAL.Encryption
             return Convert.ToBase64String(outputBuffer);
         }
 
-        public static string Decrypt(this string text)
+        public string Decrypt(string text)
         {
             SymmetricAlgorithm algorithm = DES.Create();
             ICryptoTransform transform = algorithm.CreateDecryptor(key, iv);

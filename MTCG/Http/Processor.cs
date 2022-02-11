@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace MTCG.Http
 {
-    class HttpProcessor
+    class Processor
     {
         private TcpClient socket;
-        private HttpServer httpServer;
+        private Server httpServer;
        
-        public HttpProcessor(TcpClient s, HttpServer httpServer)
+        public Processor(TcpClient s, Server httpServer)
         {
             this.socket = s;
             this.httpServer = httpServer;
@@ -27,8 +27,8 @@ namespace MTCG.Http
         {
             var writer = new StreamWriter(socket.GetStream()) { AutoFlush = true };
             var reader = new StreamReader(socket.GetStream());
-            HttpRequest req = new HttpRequest();
-            HttpResponse res = new HttpResponse();
+            Request req = new Request();
+            Response res = new Response();
             Console.WriteLine();
             
             // read (and handle) the full HTTP-request
@@ -51,22 +51,24 @@ namespace MTCG.Http
                 else
                 {
                     var parts = line.Split(' ');
-                    req.AddHeaders(parts[0].TrimEnd(':'), parts[1]);                       
-                    res.StatusCode = (int)HttpStatusCode.BadRequest; 
+                    req.AddHeaders(parts[0].TrimEnd(':'), parts[1]);
                 }
             }
-
             if (req.Headers.ContainsKey("Content-Length"))
             {
                 string contentLength;
                 req.Headers.TryGetValue("Content-Length", out contentLength);
 
-                // check if body is not empty
                 if (int.Parse(contentLength) > 0)
-                    res  = req.ProcessContent(reader);
-                //ERROR HANDLING
-            }
-          
+                {              
+                     char[] buffer = new char[Convert.ToInt32(req.Headers["Content-Length"])];
+                     reader.Read(buffer, 0, Convert.ToInt32(req.Headers["Content-Length"]));
+                     string content_string = new(buffer);
+                    req.Content = content_string;
+
+                    res = req.ProcessContent(req);
+                }                   
+            }        
          res.sendResponse(writer);
         }  
     }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Handlers
+namespace MTCG.Endpoints
 {
-    class Sessions
+    class Stats
     {
     }
 }

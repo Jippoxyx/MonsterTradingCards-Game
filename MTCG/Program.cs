@@ -8,7 +8,7 @@ namespace MTCG
     {
         static void Main(string[] args)
         {   
-            HttpServer newServer = new HttpServer(10001);
+            Server newServer = new Server(10001);
             newServer.Run();
         }
     }

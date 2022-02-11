@@ -1,33 +1,38 @@
 ﻿using MTCG.DAL.Database;
-using MTCG.Handlers;
+using MTCG.DAL.Encryption;
 using MTCG.Model;
 using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG.DAL.Access
 {
     class UserAccess
     {
         Postgres db = new Postgres();
+        EncryptDecrypt crypt = new EncryptDecrypt();
        
-        public void InsertUser(UserModel user)
+        //Registration
+        public void CreateUser(UserModel user)
         {
            using (NpgsqlCommand command = db.GetConnection().CreateCommand())
            {
-                    command.CommandText = "INSERT INTO users (username, password) VALUES (@username, @password)";
+              command.CommandText = "INSERT INTO users (username, password) VALUES (@username, @password)";
+             
+              string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                //bool verified = BCrypt.Net.BCrypt.Verify("Pa$$w0rd", passwordHash);
 
-                    command.Parameters.AddWithValue("username", user.Username);
-                    command.Parameters.AddWithValue("password", user.Password); //Pw verschlüsseln
+                Console.WriteLine(passwordHash);
 
-                    command.Prepare();
+              command.Parameters.AddWithValue("username", user.Username);
+              command.Parameters.AddWithValue("password", passwordHash); 
 
-                    command.ExecuteNonQuery();
+              command.Prepare();
+
+              command.ExecuteNonQuery();
            }             
         }
+
+        
+        
     }
 }

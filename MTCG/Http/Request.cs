@@ -11,57 +11,53 @@ using Npgsql;
 using MTCG.DAL.Database;
 using MTCG.DAL.Access;
 
+
 namespace MTCG.Http
 {
-    class HttpRequest
+    class Request
     {
         public string Method { get;  set; }
         public string Path { get;  set; }
         public string Version { get; set; }
+        public string Content { get; set; }
         public Dictionary<string, string> Headers { get; }
 
-        public HttpRequest()
+        public Request()
         {
             Headers = new Dictionary<string, string>();
         }
 
-        public HttpResponse ProcessContent(StreamReader reader)
+        public Response ProcessContent(Request req)
         {
-            // write content to buffer
-            char[] buffer = new char[Convert.ToInt32(Headers["Content-Length"])];
-            reader.Read(buffer, 0, Convert.ToInt32(Headers["Content-Length"]));
-            string content_string = new(buffer);
-
             // Execute process Member of called type (for instance: users)
             Type pathClass = getPathOfRequest();
-            HttpResponse resp = new HttpResponse();
+            Response resp = new Response();
 
             /*
             if (pathClass != null)
-                resp = (HttpResponse)getMethodOfType(pathClass, Method).Invoke(Activator.CreateInstance(pathClass, content_string), null);
-            //error catch wenn path nicht existiert 
-            else
-            {
-                res.Content = null;
-                resp.StatusCode = (int)HttpStatusCode.BadRequest;
+             {
+                resp = (HttpResponse)getMethodOfType(pathClass, Method)
+            .Invoke(Activator.CreateInstance(pathClass, content_string), null);
             }
-            
+             else
+            {
+                    res.StatusCode = (int)HttpStatusCode.BadRequest;
+                    res.Content = "Something went wrong";
+            return res;
+            }
+            */
+            Users user = new Users(req);
+            Sessions use = new Sessions(req);         
+            resp = user.POST();
 
-            resp.StatusCode = (int)HttpStatusCode.BadRequest;           
-            */   
-            
-
-            Users use = new Users(content_string);         
-            resp = use.POST();
-
-            //ERROR HANDLING
             return resp;
         }
 
         private Type getPathOfRequest()
         {
             // types must have unique names not case sensitive
-            return Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name.ToLower() == Path.Trim().Replace("/", "").ToLower());
+            return Assembly.GetExecutingAssembly().GetTypes()
+                .FirstOrDefault(t => t.Name.ToLower() == Path.Trim().Replace("/", "").ToLower());
         }
 
         private MethodInfo getMethodOfType(Type type, string method)
