@@ -1,4 +1,5 @@
-﻿using MTCG.Handlers;
+﻿using MTCG.DAL.Access;
+using MTCG.Handlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,12 +24,14 @@ namespace MTCG.Http
             this.httpServer = httpServer;
         }
 
+        Request req = new Request();
+        Response res = new Response();
+
         public void Process()
         {
             var writer = new StreamWriter(socket.GetStream()) { AutoFlush = true };
             var reader = new StreamReader(socket.GetStream());
-            Request req = new Request();
-            Response res = new Response();
+           
             Console.WriteLine();
             
             // read (and handle) the full HTTP-request
@@ -66,10 +69,48 @@ namespace MTCG.Http
                      string content_string = new(buffer);
                     req.Content = content_string;
 
-                    res = req.ProcessContent(req);
+                    res = ProcessContent(req);
                 }                   
             }        
          res.sendResponse(writer);
-        }  
+        }
+
+        public Response ProcessContent(Request req)
+        {
+            Type pathClass = getPathOfRequest();
+            Response resp = new Response();
+
+            /*
+            if (pathClass != null)
+             {
+                resp = (HttpResponse)getMethodOfType(pathClass, Method)
+            .Invoke(Activator.CreateInstance(pathClass, content_string), null);
+            }
+             else
+            {
+                    res.StatusCode = (int)HttpStatusCode.BadRequest;
+                    res.Content = "Something went wrong";
+            return res;
+            }
+            */
+            Users user = new Users(req);
+            Sessions usee = new Sessions(req);
+            resp = usee.POST();
+        
+            return resp;
+        }
+      
+        public Type getPathOfRequest()
+        {
+            // types must have unique names not case sensitive
+            return Assembly.GetExecutingAssembly().GetTypes()
+                .FirstOrDefault(t => t.Name.ToLower() == req.Path.Trim().Replace("/", "").ToLower());
+        }
+
+        public MethodInfo getMethodOfType(Type type, string method)
+        {
+            // interface IHandler enforces Handle
+            return type.GetMethod(nameof(method));
+        }
     }
 }

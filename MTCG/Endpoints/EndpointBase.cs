@@ -1,14 +1,23 @@
-﻿using MTCG.DAL.Access;
+﻿using MTCG.BL.Service;
+using MTCG.DAL.Access;
 using MTCG.Http;
+using MTCG.Model;
+
 namespace MTCG.Handlers
 {
     abstract class EndpointBase<T> 
     {
         public EndpointBase(T parameters) { }
 
-        public Response res = new Response();
-        public Request req = new Request();
-        public UserAccess userAcc = new UserAccess();
+        protected Response res = new Response();
+        protected Request req = new Request();
+
+        protected UserService userServ = new UserService();
+        
+        protected UserModel userObj = new UserModel();
+
+        protected UserAccess userAcc = new UserAccess();
+       
 
         public virtual Response POST() 
         {

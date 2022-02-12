@@ -19,7 +19,7 @@ namespace MTCG.Handlers {
         {    
             try
             {
-                UserModel userObj = JsonSerializer.Deserialize<UserModel>(req.Content);
+                userObj = JsonSerializer.Deserialize<UserModel>(req.Content);
                 Console.WriteLine(req.Content);
                 userAcc.CreateUser(userObj);
                 Console.WriteLine("New User created");
