@@ -19,15 +19,9 @@ namespace MTCG.DAL.Database
             {
                Console.WriteLine("Connection failed");
                return null;
-            }
-        
+            }       
             return conn;
-        } 
-        
-        public NpgsqlConnection GetConnection()
-        {
-            return CreateConnection();
-        }     
+        }        
     }
 }
 

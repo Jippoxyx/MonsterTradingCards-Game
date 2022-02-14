@@ -10,25 +10,23 @@ namespace MTCG.BL.Service
 {
     class UserService
     {
-        public string CreateToken(UserModel plain, UserModel hashed)
+        public string CreateToken(UserModel user)
         {
             string token = null;
-            try
-            {               
-                if(plain != null && hashed != null)
-                {
-                    if (BCrypt.Net.BCrypt.Verify(plain.Password, hashed.Password))
-                    {
-                     
-                        token = $"Basic {hashed.Username}-mtcgToken";
-                    }
-                }                
-            }
-            catch(NullReferenceException)
-            {
-                return null;
-            }
+            token = $"Basic {user.Username}-mtcgToken";                                        
             return token;
+        }
+
+        public bool loogedIn(UserModel plain, UserModel hashed)
+        {
+            if (plain != null && hashed != null)
+            {
+                if (BCrypt.Net.BCrypt.Verify(plain.Password, hashed.Password))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

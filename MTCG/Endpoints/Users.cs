@@ -6,7 +6,7 @@ using System;
 using System.Text.Json;
 
 
-namespace MTCG.Handlers {
+namespace MTCG.Endpoint {
     class Users : EndpointBase<Request>
     {    
         public Users(Request req) : base(req)

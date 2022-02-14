@@ -2,8 +2,9 @@
 using MTCG.DAL.Access;
 using MTCG.Http;
 using MTCG.Model;
+using MTCG.Models;
 
-namespace MTCG.Handlers
+namespace MTCG.Endpoint
 {
     abstract class EndpointBase<T> 
     {
@@ -13,11 +14,13 @@ namespace MTCG.Handlers
         protected Request req = new Request();
 
         protected UserService userServ = new UserService();
-        
-        protected UserModel userObj = new UserModel();
-
+           
         protected UserAccess userAcc = new UserAccess();
-       
+        protected CardAccess cardAcc = new CardAccess();
+
+        protected UserModel userObj = new UserModel();
+        
+
 
         public virtual Response POST() 
         {

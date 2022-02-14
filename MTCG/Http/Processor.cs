@@ -1,5 +1,5 @@
 ﻿using MTCG.DAL.Access;
-using MTCG.Handlers;
+using MTCG.Endpoint;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,8 +25,8 @@ namespace MTCG.Http
             this.httpServer = httpServer;
         }
 
-        Request req = new Request();
-        Response res = new Response();
+        private Request req = new Request();
+        private Response res = new Response();
 
         public void Process()
         {
@@ -44,60 +45,55 @@ namespace MTCG.Http
 
                 // handle first line of HTTP
                 if (req.Method == null)
-                {
+                {  
                     var parts = line.Split(' ');
                     req.Method = parts[0]; // POST
-                    req.Path = parts[1]; // /users 
-                    req.Version = parts[2]; // HTTP/1.1
+                    req.Path = parts[1]; // /users                     
+                    req.Version = parts[2]; // HTTP/1.1                  
                 }
                 // handle HTTP headers
                 else
                 {
-                    var parts = line.Split(' ');
-                    req.AddHeaders(parts[0].TrimEnd(':'), parts[1]);
+                    var parts = line.Split(": ");
+                    req.AddHeaders(parts[0].TrimEnd(':'), parts[1]);                   
                 }
             }
+            SplitPath(req.Path);
+            Console.WriteLine(req.Path);
+
             if (req.Headers.ContainsKey("Content-Length"))
             {
                 string contentLength;
                 req.Headers.TryGetValue("Content-Length", out contentLength);
 
                 if (int.Parse(contentLength) > 0)
-                {              
-                     char[] buffer = new char[Convert.ToInt32(req.Headers["Content-Length"])];
-                     reader.Read(buffer, 0, Convert.ToInt32(req.Headers["Content-Length"]));
-                     string content_string = new(buffer);
-                    req.Content = content_string;
-
-                    res = ProcessContent(req);
+                {
+                    char[] buffer = new char[Convert.ToInt32(req.Headers["Content-Length"])];
+                    reader.Read(buffer, 0, Convert.ToInt32(req.Headers["Content-Length"]));
+                    string content_string = new(buffer);
+                    req.Content = content_string;                   
+                    
                 }                   
-            }        
-         res.sendResponse(writer);
+            }
+            res = ProcessContent(req);
+            res.sendResponse(writer);
         }
 
         public Response ProcessContent(Request req)
         {
             Type pathClass = getPathOfRequest();
-            Response resp = new Response();
-
-            /*
-            if (pathClass != null)
-             {
-                resp = (HttpResponse)getMethodOfType(pathClass, Method)
-            .Invoke(Activator.CreateInstance(pathClass, content_string), null);
-            }
-             else
+            Response response = new Response();
+            try
             {
-                    res.StatusCode = (int)HttpStatusCode.BadRequest;
-                    res.Content = "Something went wrong";
-            return res;
+                var inst = Activator.CreateInstance(pathClass, req);
+                var meth = getMethodOfType(pathClass, req.Method);
+                response = (Response)(meth.Invoke(inst, null));
             }
-            */
-            Users user = new Users(req);
-            Sessions usee = new Sessions(req);
-            resp = usee.POST();
-        
-            return resp;
+            catch(NullReferenceException)
+            {
+                return null;
+            }                  
+            return response;
         }
       
         public Type getPathOfRequest()
@@ -109,8 +105,17 @@ namespace MTCG.Http
 
         public MethodInfo getMethodOfType(Type type, string method)
         {
-            // interface IHandler enforces Handle
-            return type.GetMethod(nameof(method));
+            return type.GetMethod(method);
         }
+        
+        public void SplitPath(string path)
+        {
+            if (path.Count(x => x == '/') > 1)
+            {
+                string[] parts = Regex.Split(path, @"(?=/)");
+                req.Path = parts[1]; 
+                req.SubPath = parts[2].Replace("/", "");
+            }
+        }    
     }
 }

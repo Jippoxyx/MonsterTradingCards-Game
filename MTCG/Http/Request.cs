@@ -1,4 +1,4 @@
-﻿using MTCG.Handlers;
+﻿using MTCG.Endpoint;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,9 +18,10 @@ namespace MTCG.Http
     {
         public string Method { get;  set; }
         public string Path { get;  set; }
+        public string SubPath { get; set; }
         public string Version { get; set; }
         public string Content { get; set; }
-        public Dictionary<string, string> Headers { get; }
+        public Dictionary<string, string> Headers { get; set; }
 
         public Request()
         {
@@ -31,5 +32,7 @@ namespace MTCG.Http
         {
             Headers.Add(key, value);
         }
+
+
     }
 }

@@ -8,12 +8,11 @@ namespace MTCG.DAL.Access
     class UserAccess
     {
         Postgres db = new Postgres();
-        
 
         //Registration
         public void CreateUser(UserModel user)
         {
-            using (NpgsqlCommand command = db.GetConnection().CreateCommand())
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
                 command.CommandText = "INSERT INTO users (username, password) VALUES (@username, @password)";
                 command.Parameters.AddWithValue("username", user.Username);
@@ -28,9 +27,8 @@ namespace MTCG.DAL.Access
         {
             UserModel user = new UserModel();
             try
-            {
-                
-                using (NpgsqlCommand command = db.GetConnection().CreateCommand())
+            {              
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
                     command.CommandText = "SELECT userid, username,password FROM users WHERE username = @username";
                     command.Parameters.AddWithValue($"@username", username);
@@ -45,8 +43,8 @@ namespace MTCG.DAL.Access
                 }
             }
             catch(NullReferenceException)
-            {
-               return null;
+            {     
+                return null;
             }                      
             catch(InvalidOperationException)
             {
