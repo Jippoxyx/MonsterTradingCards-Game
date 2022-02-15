@@ -60,7 +60,6 @@ namespace MTCG.Http
             }
             SplitPath(req.Path);
             Console.WriteLine(req.Path);
-
             if (req.Headers.ContainsKey("Content-Length"))
             {
                 string contentLength;
@@ -71,8 +70,7 @@ namespace MTCG.Http
                     char[] buffer = new char[Convert.ToInt32(req.Headers["Content-Length"])];
                     reader.Read(buffer, 0, Convert.ToInt32(req.Headers["Content-Length"]));
                     string content_string = new(buffer);
-                    req.Content = content_string;                   
-                    
+                    req.Content = content_string;                                      
                 }                   
             }
             res = ProcessContent(req);

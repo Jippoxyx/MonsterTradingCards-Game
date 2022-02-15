@@ -1,22 +1,15 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MTCG.Models
+﻿namespace MTCG.Models
 {
-    public enum Element
+    public enum Elements
     { 
-      Normal, 
-      Water, 
-      Fire 
+      Normal = 0, 
+      Water = 1, 
+      Fire = 2 
     }
     public enum CardType
     { 
-        Spell, 
-      Monster 
+        Spell = 0, 
+      Monster = 1 
     }
     class CardModel
     {
@@ -25,9 +18,9 @@ namespace MTCG.Models
         public int Damage { get; set; }       
         public string Description { get; set; }
         public CardType Type { get; set; }
-        public Element Element { get; set; }
-
-        public CardModel(string cardId, string Name, int Damage, string Descrition, CardType Type, Element Element)
+        public Elements Element { get; set; }
+        
+        public CardModel(string cardId, string Name, int Damage, string Descrition, CardType Type, Elements Element)
         {
             this.Id = cardId;
             this.Name = Name;
@@ -35,6 +28,6 @@ namespace MTCG.Models
             this.Description = Description;
             this.Type = Type;
             this.Element = Element;
-        }
+        } 
     }
 }

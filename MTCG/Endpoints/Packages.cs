@@ -33,11 +33,13 @@ namespace MTCG.Endpoint
                     List<CardModel> package;                   
                     package = JsonConvert.DeserializeObject < List<CardModel> > (req.Content);
                     
-                    //cardAcc.CreatePackagesByAdmin(package);
-                                  
-                    Console.WriteLine("New Cards created by amdin");
-                    res.StatusCode = (int)HttpStatusCode.Created;
-                    res.Content = "New Cards created by admin";
+                    if(cardServ.CreateCards(package))
+                    {
+                        Console.WriteLine("New Cards created by amdin");
+                        res.StatusCode = (int)HttpStatusCode.Created;
+                        res.Content = "New Cards created by admin";
+                        return res;
+                    }                   
                 }
                 else
                 {

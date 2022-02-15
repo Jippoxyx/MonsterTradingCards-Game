@@ -52,5 +52,18 @@ namespace MTCG.DAL.Access
             }
             return user;
         }
+
+        public void InsertToken(string username, string token)
+        {
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            {
+                command.CommandText = "UPDATE users SET token = @token WHERE username = @username";
+                command.Parameters.AddWithValue("token", token);
+                command.Parameters.AddWithValue("username", username);
+
+                command.Prepare();
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

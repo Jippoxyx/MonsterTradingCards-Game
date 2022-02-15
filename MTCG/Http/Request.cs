@@ -32,7 +32,5 @@ namespace MTCG.Http
         {
             Headers.Add(key, value);
         }
-
-
     }
 }

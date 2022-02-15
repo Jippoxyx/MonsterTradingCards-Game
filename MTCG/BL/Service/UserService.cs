@@ -1,4 +1,5 @@
-﻿using MTCG.Model;
+﻿using MTCG.DAL.Access;
+using MTCG.Model;
 using Org.BouncyCastle.Asn1.Cms;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,13 @@ namespace MTCG.BL.Service
 {
     class UserService
     {
+        private UserAccess userAcc = new UserAccess();
         public string CreateToken(UserModel user)
         {
             string token = null;
-            token = $"Basic {user.Username}-mtcgToken";                                        
+            token = $"Basic {user.Username}-mtcgToken";
+            userAcc.InsertToken(user.Username, token);
+
             return token;
         }
 

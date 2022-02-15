@@ -15,11 +15,19 @@ namespace MTCG.Endpoint
             this.req = req;
         }
 
+        //acquire packages 
         public override Response POST()
         {
-            Console.WriteLine("This message is from TransactionsPackage");
+            string token = req.Headers["Authorization"];
+            Console.WriteLine(token);
             return res;
         }
-    } 
+
+        //show all acquired cards
+        public override Response GET()
+        {
+            return res;
+        }
+    }
 }
 
