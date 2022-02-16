@@ -14,10 +14,11 @@ namespace MTCG.DAL.Access
         {
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
-                command.CommandText = "INSERT INTO users (username, password) VALUES (@username, @password)";
+                command.CommandText = "INSERT INTO users (username, password, coins) VALUES (@username, @password, @coins)";
                 command.Parameters.AddWithValue("username", user.Username);
                 command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
-           
+                command.Parameters.AddWithValue("coins", user.Coins);
+
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
@@ -30,16 +31,18 @@ namespace MTCG.DAL.Access
             {              
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT userid, username,password FROM users WHERE username = @username";
+                    command.CommandText = "SELECT userid, username, password, coins FROM users WHERE username = @username";
                     command.Parameters.AddWithValue($"@username", username);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
-
+                    
                     reader.Read();
 
                     user.UserID = reader.GetInt32(0);
                     user.Username = reader.GetString(1);
                     user.Password = reader.GetString(2);
+                    user.Coins = reader.GetInt32(3);
+
                 }
             }
             catch(NullReferenceException)
@@ -64,6 +67,37 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+        }
+
+        public UserModel Authorizationen(string token)
+        {
+            UserModel user = new UserModel();
+            try
+            {
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+
+                    command.CommandText = "SELECT userid, username FROM users WHERE token = @token";
+                    command.Parameters.AddWithValue("@token", token);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    reader.Read();
+
+                    user.UserID = reader.GetInt32(0);
+                    user.Username = reader.GetString(1);
+                }
+            }
+            //returns null if token doesnt exist
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return user;           
         }
     }
 }

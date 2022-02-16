@@ -1,10 +1,9 @@
 ﻿using MTCG.DAL.Access;
+using MTCG.Model;
 using MTCG.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG.BL.Service
 {
@@ -35,7 +34,8 @@ namespace MTCG.BL.Service
                     {
                         card.Type = (CardType)(int)CardType.Monster;
                     }
-                    card.Description = GenerateCardDescription(20);                
+                    //get random description
+                    card.Description = GenerateCardDescription(29);                
                     //get random Element                    
                     card.Element = (Elements)values.GetValue(random.Next(values.Length));
                 }
@@ -44,5 +44,21 @@ namespace MTCG.BL.Service
             }           
             return false;
         }
+
+        public bool AcquirePackages(UserModel user)
+        {
+            //check if enough packages available
+            if(cardAcc.CheckPackagesAvailable())
+            {
+                //assign cards to the user
+                cardAcc.GetPackage(user);
+                //user pays
+                int currentCoins = user.Coins;
+                currentCoins -= 5;
+                cardAcc.PayCoins(user.Username, currentCoins);
+                return true;
+            }
+            return false;
+        }        
     }
 }

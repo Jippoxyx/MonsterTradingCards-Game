@@ -32,5 +32,5 @@ namespace MTCG.BL.Service
             }
             return false;
         }
-    }
+    }  
 }

@@ -1,16 +1,9 @@
-﻿using MTCG.DAL.Access;
-using MTCG.Endpoint;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MTCG.Http
 {
