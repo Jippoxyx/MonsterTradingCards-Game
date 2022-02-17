@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MTCG.BL.Service
@@ -31,6 +32,17 @@ namespace MTCG.BL.Service
                 }
             }
             return false;
+        }
+
+        public string GetUserProfile(UserModel user)
+        {
+            List<Object> profile = new List<object>();
+            profile.Add(user.UserID);
+            profile.Add(user.Username);
+            profile.Add(user.Coins);
+            profile.Add(user.Bio);
+            profile.Add(user.Image);
+            return JsonSerializer.Serialize(profile);
         }
     }  
 }

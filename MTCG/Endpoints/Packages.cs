@@ -43,7 +43,7 @@ namespace MTCG.Endpoint
                 }
                 else
                 {
-                    res.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    res.StatusCode = (int)HttpStatusCode.Forbidden;
                     res.Content = "Only admin can create new packages";
                     return res;
                 }             

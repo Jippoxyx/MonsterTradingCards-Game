@@ -27,7 +27,6 @@ namespace MTCG.Endpoint
 
                 //returns null if username doesnt exist
                 users = userAcc.GetUserByName(userObj.Username);               
-
                 //true if password macthes
                 if (users != null && userServ.loogedIn(userObj, users))
                 {

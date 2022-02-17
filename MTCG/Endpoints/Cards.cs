@@ -17,6 +17,22 @@ namespace MTCG.Endpoint
         //show all acquired cards
         public override Response GET()
         {
+            try
+            {
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                if (userObj == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    res.Content = "Invalid token";
+                    return res;
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Uppsii something went wrong");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Error";
+            }
             return res;
         }
     }

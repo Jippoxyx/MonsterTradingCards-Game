@@ -3,6 +3,7 @@ using MTCG.Http;
 using MTCG.Model;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 
 
@@ -14,7 +15,7 @@ namespace MTCG.Endpoint {
             this.req = req;
         }
 
-        //Registration
+        //registration
         public override Response POST()
         {    
             try
@@ -46,16 +47,75 @@ namespace MTCG.Endpoint {
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
                 res.Content = "Something went wrong";
                 return res;
-            }
-            
+            }          
             return res;
         }
         
-        public override Response DELETE()
+        //get profile
+        public override Response GET()
         {
-            Console.WriteLine("Server refuses to fulfill the request");
-            res.Content = "Server refuses to fulfill the request";
-            res.StatusCode = (int)HttpStatusCode.Forbidden;
+            try
+            {
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                if (userObj == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    res.Content = "Invalid token";
+                    return res;                  
+                }
+                else if(userObj.Username != req.SubPath)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Forbidden;
+                    res.Content = "Access denied";
+                    return res;
+                }
+
+                res.StatusCode = (int)HttpStatusCode.OK;
+                res.Content = userServ.GetUserProfile(userObj);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Something went wrong");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Something went wrong";
+            }
+            return res;
+        }
+
+        //change user profile
+        public override Response PUT()
+        {
+           
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                if (userObj == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    res.Content = "Invalid token";
+                    return res;
+                }
+                else if (userObj.Username != req.SubPath)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Forbidden;
+                    res.Content = "Access denied";
+                    return res;
+                }
+
+                Dictionary<string, string> userUpdate = JsonSerializer.Deserialize<Dictionary<string, string>>(req.Content);
+                userObj.Username = userUpdate["Name"];
+                userObj.Bio = userUpdate["Bio"];
+                userObj.Image = userUpdate["Image"];
+                if (userAcc.EditUserProfile(userObj))
+                {
+                    res.StatusCode = (int)HttpStatusCode.OK;
+                    res.Content = "Success! User profile updated";
+                }     
+            
+            /*catch (Exception)
+            {
+                Console.WriteLine("Something went wrong");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Something went wrong";
+            }*/
             return res;
         }
     }

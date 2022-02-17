@@ -11,6 +11,9 @@ namespace MTCG.Model
         public int UserID { get; set; }
         public string Username{ get; set;}
         public string Password { get; set; }
-        public int Coins = 20;
+        public int Coins { get; set; }
+        public string Bio { get; set; }
+        public string Image { get; set; }
+
     }
 }

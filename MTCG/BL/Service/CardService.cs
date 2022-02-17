@@ -47,18 +47,22 @@ namespace MTCG.BL.Service
 
         public bool AcquirePackages(UserModel user)
         {
-            //check if enough packages available
+            //check if at least 5 packages available
             if(cardAcc.CheckPackagesAvailable())
             {
                 //assign cards to the user
                 cardAcc.GetPackage(user);
-                //user pays
+                //user pays 5 coins
                 int currentCoins = user.Coins;
                 currentCoins -= 5;
                 cardAcc.PayCoins(user.Username, currentCoins);
                 return true;
             }
             return false;
-        }        
+        }
+       // public List<CardModel> ShowAcquiredCards()
+        //{
+
+  //      }
     }
 }

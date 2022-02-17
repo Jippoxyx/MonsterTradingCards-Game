@@ -71,5 +71,40 @@ namespace MTCG.DAL.Access
                 command.ExecuteNonQuery();
             }
         }
+
+        public List<string> GetAcquiredCards(UserModel user)
+        {
+            List<string> cards = new List<string>();
+            try
+            {              
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT* cardname FROM cards WHERE player = @username";
+
+                    command.Parameters.AddWithValue("username", user.Username);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    reader.Read();
+
+                    while (reader.Read())
+                    {
+                        cards.Add(reader.GetString(0));
+                    }
+
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return cards;
+        }
     }
 }

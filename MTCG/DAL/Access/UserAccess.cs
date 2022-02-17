@@ -17,7 +17,7 @@ namespace MTCG.DAL.Access
                 command.CommandText = "INSERT INTO users (username, password, coins) VALUES (@username, @password, @coins)";
                 command.Parameters.AddWithValue("username", user.Username);
                 command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
-                command.Parameters.AddWithValue("coins", user.Coins);
+                command.Parameters.AddWithValue("coins", 20);
 
                 command.Prepare();
                 command.ExecuteNonQuery();
@@ -98,6 +98,34 @@ namespace MTCG.DAL.Access
                 return null;
             }
             return user;           
+        }
+
+        public bool EditUserProfile(UserModel user)
+        {
+            try
+            {
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "UPDATE users SET username = @username, bio = @bio, image = @image WHERE userid = @userid";
+
+                    command.Parameters.AddWithValue("@userid", user.UserID);
+                    command.Parameters.AddWithValue("@username", user.Username);
+                    command.Parameters.AddWithValue("@bio", user.Bio);
+                    command.Parameters.AddWithValue("@image", user.Image);
+
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
