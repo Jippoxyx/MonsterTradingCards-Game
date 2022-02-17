@@ -36,9 +36,10 @@ namespace MTCG.DAL.Access
         {
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
-                command.CommandText = "UPDATE cards SET player = @username WHERE cardid IN(SELECT player FROM cards WHERE player IS NULL ORDER BY random() LIMIT 5)";             
-               
-                command.Parameters.AddWithValue("username", user.Username);
+                command.CommandText = "UPDATE cards SET player = @userid WHERE cardid " +
+                "IN(SELECT cardid FROM cards WHERE player IS NULL ORDER BY random() LIMIT 5)";             
+  
+                command.Parameters.AddWithValue("userid", user.UserID);
 
                 command.Prepare();
                 command.ExecuteNonQuery();

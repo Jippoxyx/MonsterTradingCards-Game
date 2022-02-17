@@ -19,7 +19,8 @@ namespace MTCG.Endpoint
         //acquire packages 
         public override Response POST()
         {
-          userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+           
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
                 if(userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -42,9 +43,8 @@ namespace MTCG.Endpoint
                 {
                     res.StatusCode = (int)HttpStatusCode.BadRequest;
                     res.Content = "Error, no packages available";
-                    return res;
                 }                
-            
+          
             /*catch (Exception)
             {
                 Console.WriteLine("Uppsii something went wrong");

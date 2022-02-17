@@ -32,7 +32,7 @@ namespace MTCG.BL.Service
                     }
                     else
                     {
-                        card.Type = (CardType)(int)CardType.Monster;
+                        card.Type = CardType.Monster;
                     }
                     //get random description
                     card.Description = GenerateCardDescription(29);                

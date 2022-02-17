@@ -2,6 +2,7 @@
 using MTCG.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text.Json;
 
 namespace MTCG.BL.Service
@@ -48,6 +49,6 @@ namespace MTCG.BL.Service
             stats.Add(user.Loses);
             stats.Add(user.Elo);
             return JsonSerializer.Serialize(stats);
-        }
+        }       
     }  
 }

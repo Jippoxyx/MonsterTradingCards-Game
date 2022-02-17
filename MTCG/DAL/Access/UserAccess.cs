@@ -2,6 +2,7 @@
 using MTCG.Model;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 
 namespace MTCG.DAL.Access
 {
@@ -14,10 +15,13 @@ namespace MTCG.DAL.Access
         {
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
-                command.CommandText = "INSERT INTO users (username, password, coins) VALUES (@username, @password, @coins)";
+                command.CommandText = "INSERT INTO users (username, password, coins,wins,loses, elo) VALUES (@username, @password, @coins, @wins, @loses, @elo)";
                 command.Parameters.AddWithValue("username", user.Username);
                 command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
                 command.Parameters.AddWithValue("coins", 20);
+                command.Parameters.AddWithValue("wins", 0);
+                command.Parameters.AddWithValue("loses", 0);
+                command.Parameters.AddWithValue("elo", 100);
 
                 command.Prepare();
                 command.ExecuteNonQuery();
@@ -129,6 +133,25 @@ namespace MTCG.DAL.Access
                 return false;
             }
             return true;
+        }
+
+        public Dictionary<string, int> GetScoreboard()
+        {
+            Dictionary<string, int> scores = new Dictionary<string, int>();
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            {
+                command.CommandText = "SELECT username, elo FROM users ORDER BY elo DESC";               
+
+                NpgsqlDataReader reader = command.ExecuteReader();
+
+                reader.Read();
+
+                while (reader.Read())
+                {
+                    scores.Add(reader.GetString(0), reader.GetInt32(1));
+                }
+            }
+            return scores;
         }
     }
 }

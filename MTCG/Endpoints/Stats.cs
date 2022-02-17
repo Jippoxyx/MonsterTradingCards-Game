@@ -14,6 +14,7 @@ namespace MTCG.Endpoint
             this.req = req;
         }
 
+        //get stats
         public override Response GET()
         {
             try
