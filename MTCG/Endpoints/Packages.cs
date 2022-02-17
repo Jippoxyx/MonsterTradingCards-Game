@@ -15,7 +15,6 @@ namespace MTCG.Endpoint
 {
     class Packages : EndpointBase<Request>
     {
-        //private CardModel cardObj = new CardModel();
         public Packages(Request req) : base(req)
         {
             this.req = req;

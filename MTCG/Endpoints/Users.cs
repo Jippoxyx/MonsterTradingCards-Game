@@ -85,7 +85,8 @@ namespace MTCG.Endpoint {
         //change user profile
         public override Response PUT()
         {
-           
+            try
+            {
                 userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
@@ -109,13 +110,13 @@ namespace MTCG.Endpoint {
                     res.StatusCode = (int)HttpStatusCode.OK;
                     res.Content = "Success! User profile updated";
                 }     
-            
-            /*catch (Exception)
+            }
+            catch (Exception)
             {
                 Console.WriteLine("Something went wrong");
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
                 res.Content = "Something went wrong";
-            }*/
+            }
             return res;
         }
     }

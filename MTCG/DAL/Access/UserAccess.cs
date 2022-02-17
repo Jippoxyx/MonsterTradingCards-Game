@@ -42,7 +42,6 @@ namespace MTCG.DAL.Access
                     user.Username = reader.GetString(1);
                     user.Password = reader.GetString(2);
                     user.Coins = reader.GetInt32(3);
-
                 }
             }
             catch(NullReferenceException)
@@ -77,7 +76,7 @@ namespace MTCG.DAL.Access
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
 
-                    command.CommandText = "SELECT userid, username FROM users WHERE token = @token";
+                    command.CommandText = "SELECT userid, username, coins, wins, loses, elo FROM users WHERE token = @token";
                     command.Parameters.AddWithValue("@token", token);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
@@ -86,6 +85,10 @@ namespace MTCG.DAL.Access
 
                     user.UserID = reader.GetInt32(0);
                     user.Username = reader.GetString(1);
+                    user.Coins = reader.GetInt32(2);
+                    user.Wins = reader.GetInt32(3); ;
+                    user.Loses = reader.GetInt32(4);
+                    user.Elo = reader.GetInt32(5);
                 }
             }
             //returns null if token doesnt exist

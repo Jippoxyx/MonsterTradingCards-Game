@@ -1,12 +1,8 @@
 ﻿using MTCG.DAL.Access;
 using MTCG.Model;
-using Org.BouncyCastle.Asn1.Cms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MTCG.BL.Service
 {
@@ -43,6 +39,15 @@ namespace MTCG.BL.Service
             profile.Add(user.Bio);
             profile.Add(user.Image);
             return JsonSerializer.Serialize(profile);
+        }
+
+        public string GetStats(UserModel user)
+        {
+            List<Object> stats = new List<object>();
+            stats.Add(user.Wins);
+            stats.Add(user.Loses);
+            stats.Add(user.Elo);
+            return JsonSerializer.Serialize(stats);
         }
     }  
 }
