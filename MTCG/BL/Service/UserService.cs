@@ -15,7 +15,6 @@ namespace MTCG.BL.Service
             string token = null;
             token = $"Basic {user.Username}-mtcgToken";
             userAcc.InsertToken(user.Username, token);
-
             return token;
         }
 

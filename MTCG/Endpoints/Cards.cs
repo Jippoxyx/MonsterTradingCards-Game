@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace MTCG.Endpoint
 {
@@ -26,6 +26,11 @@ namespace MTCG.Endpoint
                     res.Content = "Invalid token";
                     return res;
                 }
+
+                List<string> cardNames = new List<string>();
+                cardNames = cardAcc.GetAcquiredCards(userObj);
+                res.StatusCode = (int)HttpStatusCode.OK;
+                res.Content = JsonSerializer.Serialize(cardNames);
             }
             catch (Exception)
             {

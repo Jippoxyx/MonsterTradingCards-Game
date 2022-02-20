@@ -1,5 +1,4 @@
-﻿using MTCG.DAL.Access;
-using MTCG.Http;
+﻿using MTCG.Http;
 using MTCG.Model;
 using Npgsql;
 using System;
@@ -15,42 +14,6 @@ namespace MTCG.Endpoint {
             this.req = req;
         }
 
-        //registration
-        public override Response POST()
-        {    
-            try
-            {
-                userObj = JsonSerializer.Deserialize<UserModel>(req.Content);
-                Console.WriteLine(req.Content);
-                userAcc.CreateUser(userObj);
-                Console.WriteLine("New User created");
-                res.StatusCode = (int)HttpStatusCode.Created;
-                res.Content = "New User created";
-            }
-            catch (PostgresException)
-            {
-                Console.WriteLine("Username already exist");
-                res.StatusCode = (int)HttpStatusCode.BadRequest;
-                res.Content = "Username already exist";
-                return res;
-            }
-            catch(JsonException)
-            {
-                Console.WriteLine("Incorrect JSON format");
-                res.StatusCode = (int)HttpStatusCode.BadRequest;
-                res.Content = "Incorrect JSON format";
-                return res;
-            }
-            catch(Exception)
-            {
-                Console.WriteLine("Something went wrong");
-                res.StatusCode = (int)HttpStatusCode.BadRequest;
-                res.Content = "Something went wrong";
-                return res;
-            }          
-            return res;
-        }
-        
         //get profile
         public override Response GET()
         {
@@ -61,9 +24,9 @@ namespace MTCG.Endpoint {
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;
                     res.Content = "Invalid token";
-                    return res;                  
+                    return res;
                 }
-                else if(userObj.Username != req.SubPath)
+                else if (userObj.Username != req.SubPath)
                 {
                     res.StatusCode = (int)HttpStatusCode.Forbidden;
                     res.Content = "Access denied";
@@ -109,7 +72,7 @@ namespace MTCG.Endpoint {
                 {
                     res.StatusCode = (int)HttpStatusCode.OK;
                     res.Content = "Success! User profile updated";
-                }     
+                }
             }
             catch (Exception)
             {
@@ -117,6 +80,42 @@ namespace MTCG.Endpoint {
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
                 res.Content = "Something went wrong";
             }
+            return res;
+        }
+
+        //registration
+        public override Response POST()
+        {    
+            try
+            {
+                userObj = JsonSerializer.Deserialize<UserModel>(req.Content);
+                Console.WriteLine(req.Content);
+                userAcc.CreateUser(userObj);
+                Console.WriteLine("New User created");
+                res.StatusCode = (int)HttpStatusCode.Created;
+                res.Content = "New User created";
+            }
+            catch (PostgresException)
+            {
+                Console.WriteLine("Username already exist");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Username already exist";
+                return res;
+            }
+            catch(JsonException)
+            {
+                Console.WriteLine("Incorrect JSON format");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Incorrect JSON format";
+                return res;
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Something went wrong");
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Something went wrong";
+                return res;
+            }          
             return res;
         }
     }

@@ -80,9 +80,9 @@ namespace MTCG.DAL.Access
             {              
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
-                    command.CommandText = "SELECT* cardname FROM cards WHERE player = @username";
+                    command.CommandText = "SELECT cardname FROM cards WHERE player = @userid";
 
-                    command.Parameters.AddWithValue("username", user.Username);
+                    command.Parameters.AddWithValue("userid", user.UserID);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
 
@@ -92,9 +92,6 @@ namespace MTCG.DAL.Access
                     {
                         cards.Add(reader.GetString(0));
                     }
-
-                    command.Prepare();
-                    command.ExecuteNonQuery();
                 }
             }
             catch (NullReferenceException)

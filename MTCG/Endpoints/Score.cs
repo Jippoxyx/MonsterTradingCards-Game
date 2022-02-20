@@ -28,7 +28,7 @@ namespace MTCG.Endpoint
                 scores = userAcc.GetScoreboard();
 
                 res.StatusCode = (int)HttpStatusCode.OK;
-                // res.Content = userAcc.GetScoreboard();
+                // res.Content = yoo foreach;
                 res.Content = "blablabla";
             }
             catch (Exception)
