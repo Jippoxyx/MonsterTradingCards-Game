@@ -75,19 +75,3 @@ namespace MTCG.Endpoint
         }
     }
 }
-/*
-     foreach (var value in req.Headers.Values)
-     {
-         Console.WriteLine("Value of the Dictionary Item is: {0}", value);
-     }
-
-      foreach (var value in req.Headers.Keys)
-      {
-          Console.WriteLine("Value of the Dictionary Item is: {0}", value);
-      }
-
-      foreach (CardModel card in package)
-      {
-         Console.WriteLine(card);
-      }
-*/

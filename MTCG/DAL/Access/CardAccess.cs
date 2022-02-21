@@ -18,7 +18,6 @@ namespace MTCG.DAL.Access
                 {
                     command.CommandText = "INSERT INTO cards (cardid, cardname, damage, description, type, elements) " +
                         "VALUES (@cardid, @cardname, @damage, @description, @type, @elements)";
-
                     command.Parameters.AddWithValue("@cardid", card.Id);
                     command.Parameters.AddWithValue("@cardname", card.Name);
                     command.Parameters.AddWithValue("@damage", card.Damage);
@@ -38,7 +37,6 @@ namespace MTCG.DAL.Access
             {
                 command.CommandText = "UPDATE cards SET player = @userid WHERE cardid " +
                 "IN(SELECT cardid FROM cards WHERE player IS NULL ORDER BY random() LIMIT 5)";
-
                 command.Parameters.AddWithValue("userid", user.UserID);
 
                 command.Prepare();
@@ -64,7 +62,6 @@ namespace MTCG.DAL.Access
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
                 command.CommandText = "UPDATE users SET coins = @coins  WHERE username = @username";
-
                 command.Parameters.AddWithValue("coins", coins);
                 command.Parameters.AddWithValue("username", username);
 
@@ -81,12 +78,9 @@ namespace MTCG.DAL.Access
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
                     command.CommandText = "SELECT cardname FROM cards WHERE player = @userid";
-
                     command.Parameters.AddWithValue("userid", user.UserID);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
-
-                    reader.Read();
 
                     while (reader.Read())
                     {
@@ -111,14 +105,11 @@ namespace MTCG.DAL.Access
             try
             {
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
-                {
+                {                 
                     command.CommandText = "SELECT cardname FROM cards WHERE deck is true AND player = @userid";
-
                     command.Parameters.AddWithValue("userid", user.UserID);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
-
-                    reader.Read();
 
                     while (reader.Read())
                     {
@@ -135,7 +126,7 @@ namespace MTCG.DAL.Access
                 return null;
             }
             return deck;
-        }
+        }    
 
         //check if user has already 4 cards in deck 
         public bool CheckDeck(UserModel user)
@@ -158,7 +149,6 @@ namespace MTCG.DAL.Access
             {
                 command.CommandText = "UPDATE cards SET deck = true WHERE cardid " +
                 "IN(SELECT cardid FROM cards WHERE player = @userid ORDER BY random() LIMIT 4)";
-
                 command.Parameters.AddWithValue("userid", user.UserID);
 
                 command.Prepare();

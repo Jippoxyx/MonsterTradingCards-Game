@@ -23,18 +23,12 @@ namespace MTCG.BL.Service
             if(package != null)
             {
                 Array values = Enum.GetValues(typeof(Elements));
+                Array typeValues = Enum.GetValues(typeof(CardType));
                 foreach (var card in package)
                 {
-                    //get type
-                    if (card.Name.Contains("Spell"))
-                    {
-                        card.Type = (int)CardType.Spell;                      
-                    }
-                    else
-                    {
-                        card.Type = CardType.Monster;
-                    }
-                    //get random description
+                    //get card Type              
+                    card.Type = (CardType)typeValues.GetValue(random.Next(values.Length));
+                    //get random Description
                     card.Description = GenerateCardDescription(29);                
                     //get random Element                    
                     card.Element = (Elements)values.GetValue(random.Next(values.Length));
@@ -63,6 +57,7 @@ namespace MTCG.BL.Service
 
         public bool ConfigureDeck(UserModel user)
         {
+            //check if user has already selected a deck
             if(cardAcc.CheckDeck(user))
                 return false;
 

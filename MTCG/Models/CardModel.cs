@@ -4,12 +4,17 @@
     { 
       Normal = 0, 
       Water = 1, 
-      Fire = 2 
+      Fire = 2,
+      Light = 3,
+      Dark = 4
     }
     public enum CardType
     { 
         Spell = 0, 
-      Monster = 1 
+      Monster = 1,
+         Trap = 2,
+        artifacts = 3,
+        sorceries = 4
     }
     class CardModel
     {
@@ -19,7 +24,7 @@
         public string Description { get; set; }
         public CardType Type { get; set; }
         public Elements Element { get; set; }
-        
+
         public CardModel(string cardId, string Name, int Damage, string Descrition, CardType Type, Elements Element)
         {
             this.Id = cardId;

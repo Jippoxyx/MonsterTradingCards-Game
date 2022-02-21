@@ -8,5 +8,6 @@ namespace MTCG.Endpoint
 {
     class Battles
     {
+       
     }
 }

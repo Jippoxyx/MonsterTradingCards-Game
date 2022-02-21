@@ -27,7 +27,13 @@ namespace MTCG.Endpoint
 
                 List<string> deck = new List<string>();
                 deck = cardAcc.GetDeck(userObj);
-                if (req.SubPath.Contains("format=plain"))
+                if(deck == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.BadRequest;
+                    res.Content = "User has 0 cards selected";
+                    return res;
+                }
+                else if (req.SubPath != null && req.SubPath.Contains("format=plain"))
                 {
                     res.StatusCode = (int)HttpStatusCode.OK;
                  

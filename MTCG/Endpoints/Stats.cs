@@ -1,9 +1,6 @@
 ﻿using MTCG.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG.Endpoint
 {
@@ -27,8 +24,25 @@ namespace MTCG.Endpoint
                     return res;
                 }
 
+                List<Object> stats = new List<object>();
+                stats = userServ.GetStats(userObj);
                 res.StatusCode = (int)HttpStatusCode.OK;
-                res.Content = userServ.GetStats(userObj);
+
+                for (int i = 0; i < stats.Count; i++)
+                {
+                    if(i == 0)
+                    {
+                        res.Content += "wins: " + stats[i] + "\n";
+                    }
+                    else if(i == 1)
+                    {
+                        res.Content += "loses: " + stats[i] + "\n";
+                    }
+                    else
+                    {
+                        res.Content += "elo: " + stats[i] + "\n";
+                    }                  
+                }
             }
             catch (Exception)
             {

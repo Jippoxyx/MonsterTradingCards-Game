@@ -30,6 +30,11 @@ namespace MTCG.BL.Service
             return false;
         }
 
+        public void GetWinLoseRatio(UserModel user)
+        {
+            user.WinLoseRatio = user.Wins / user.Loses;
+        }
+
         public string GetUserProfile(UserModel user)
         {
             List<Object> profile = new List<object>();
@@ -41,13 +46,13 @@ namespace MTCG.BL.Service
             return JsonSerializer.Serialize(profile);
         }
 
-        public string GetStats(UserModel user)
+        public List<Object> GetStats(UserModel user)
         {
             List<Object> stats = new List<object>();
             stats.Add(user.Wins);
             stats.Add(user.Loses);
             stats.Add(user.Elo);
-            return JsonSerializer.Serialize(stats);
+            return stats;
         }       
     }  
 }

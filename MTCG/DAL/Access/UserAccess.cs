@@ -114,7 +114,6 @@ namespace MTCG.DAL.Access
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
                     command.CommandText = "UPDATE users SET username = @username, bio = @bio, image = @image WHERE userid = @userid";
-
                     command.Parameters.AddWithValue("@userid", user.UserID);
                     command.Parameters.AddWithValue("@username", user.Username);
                     command.Parameters.AddWithValue("@bio", user.Bio);
@@ -142,9 +141,7 @@ namespace MTCG.DAL.Access
             {
                 command.CommandText = "SELECT username, elo FROM users ORDER BY elo DESC";               
 
-                NpgsqlDataReader reader = command.ExecuteReader();
-
-                reader.Read();
+                NpgsqlDataReader reader = command.ExecuteReader();           
 
                 while (reader.Read())
                 {

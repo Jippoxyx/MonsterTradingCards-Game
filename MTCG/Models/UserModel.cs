@@ -16,6 +16,8 @@ namespace MTCG.Model
         public string Image { get; set; }
         public int Wins { get; set; }
         public int Loses {get; set;}
-        public int Elo { get; set; }       
+        public int Elo { get; set; }
+        public int GamesPlayed { get; set; }
+        public int WinLoseRatio { get; set; }
     }
 }

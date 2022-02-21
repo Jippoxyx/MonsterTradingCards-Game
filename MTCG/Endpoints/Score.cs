@@ -28,8 +28,11 @@ namespace MTCG.Endpoint
                 scores = userAcc.GetScoreboard();
 
                 res.StatusCode = (int)HttpStatusCode.OK;
-                // res.Content = yoo foreach;
-                res.Content = "blablabla";
+                
+                foreach(KeyValuePair<string, int> score in scores)
+                {
+                    res.Content += (score.Key, score.Value) + "\n";
+                }
             }
             catch (Exception)
             {
