@@ -101,6 +101,11 @@ namespace MTCG.Http
         
         public void SplitPath(string path)
         {
+            if (path.Contains("?"))
+            {
+                path = path.Replace("?", "/");
+            }           
+            
             if (path.Count(x => x == '/') > 1)
             {
                 string[] parts = Regex.Split(path, @"(?=/)");

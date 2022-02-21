@@ -1,9 +1,7 @@
 ﻿using MTCG.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace MTCG.Endpoint
 {
@@ -17,25 +15,70 @@ namespace MTCG.Endpoint
         //show all acquired cards
         public override Response GET()
         {
-            userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
-            if (userObj == null)
+            try
             {
-                res.StatusCode = (int)HttpStatusCode.Forbidden;
-                res.Content = "Access denied";
-                return res;
-            }
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                if (userObj == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Forbidden;
+                    res.Content = "Access denied";
+                    return res;
+                }
 
-            /*if (req.Path.Contains("format=plain"))
-            {
-                res.StatusCode = (int)HttpStatusCode.OK;
-                res.Content = "l";
+                List<string> deck = new List<string>();
+                deck = cardAcc.GetDeck(userObj);
+                if (req.SubPath.Contains("format=plain"))
+                {
+                    res.StatusCode = (int)HttpStatusCode.OK;
+                 
+                    for (int i = 0; i < deck.Count ; i++)
+                    {
+                        res.Content += deck[i] + "\n";
+                    }                    
+                }
+                else
+                {
+                    res.StatusCode = (int)HttpStatusCode.OK;
+                    res.Content = JsonSerializer.Serialize(deck);
+                }
             }
-            else
+            catch (Exception)
             {
-                res.StatusCode = (int)HttpStatusCode.OK;
-                res.Content = "l";               
-            }*/
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Error";
+            }
             return res;
-        }    
+        }
+
+        //configure deck 
+        public override Response PUT()
+        {
+            try
+            {
+                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                if (userObj == null)
+                {
+                    res.StatusCode = (int)HttpStatusCode.Forbidden;
+                    res.Content = "Access denied";
+                    return res;
+                }
+                else if (cardServ.ConfigureDeck(userObj))
+                {
+                    res.StatusCode = (int)HttpStatusCode.OK;
+                    res.Content = "Success! 4 cards selected for users deck";
+                }
+                else
+                {
+                    res.StatusCode = (int)HttpStatusCode.BadRequest;
+                    res.Content = "User has already 4 cards in deck";
+                }
+            }
+            catch (Exception)
+            {
+                res.StatusCode = (int)HttpStatusCode.BadRequest;
+                res.Content = "Error";
+            }
+            return res;
+        }
     }
 }

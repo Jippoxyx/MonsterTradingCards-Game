@@ -31,30 +31,30 @@ namespace MTCG.DAL.Access
                 }
             }
         }
-       
+
         public void GetPackage(UserModel user)
         {
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
                 command.CommandText = "UPDATE cards SET player = @userid WHERE cardid " +
-                "IN(SELECT cardid FROM cards WHERE player IS NULL ORDER BY random() LIMIT 5)";             
-  
+                "IN(SELECT cardid FROM cards WHERE player IS NULL ORDER BY random() LIMIT 5)";
+
                 command.Parameters.AddWithValue("userid", user.UserID);
 
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
-        }   
-         
+        }
+
         public bool CheckPackagesAvailable()
         {
             Int64 count = 0;
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
                 command.CommandText = "SELECT COUNT(*) FROM cards WHERE player is null";
-                count = (Int64)command.ExecuteScalar();            
+                count = (Int64)command.ExecuteScalar();
                 command.Prepare();
-                command.ExecuteNonQuery();        
+                command.ExecuteNonQuery();
             }
             return (count > 5);
         }
@@ -66,7 +66,7 @@ namespace MTCG.DAL.Access
                 command.CommandText = "UPDATE users SET coins = @coins  WHERE username = @username";
 
                 command.Parameters.AddWithValue("coins", coins);
-                command.Parameters.AddWithValue("username", username);         
+                command.Parameters.AddWithValue("username", username);
 
                 command.Prepare();
                 command.ExecuteNonQuery();
@@ -77,7 +77,7 @@ namespace MTCG.DAL.Access
         {
             List<string> cards = new List<string>();
             try
-            {              
+            {
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
                     command.CommandText = "SELECT cardname FROM cards WHERE player = @userid";
@@ -103,6 +103,67 @@ namespace MTCG.DAL.Access
                 return null;
             }
             return cards;
+        }
+
+        public List<string> GetDeck(UserModel user)
+        {
+            List<string> deck = new List<string>();
+            try
+            {
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT cardname FROM cards WHERE deck is true AND player = @userid";
+
+                    command.Parameters.AddWithValue("userid", user.UserID);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    reader.Read();
+
+                    while (reader.Read())
+                    {
+                        deck.Add(reader.GetString(0));
+                    }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return deck;
+        }
+
+        //check if user has already 4 cards in deck 
+        public bool CheckDeck(UserModel user)
+        {
+            Int64 count = 0;
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            {
+                command.CommandText = "SELECT COUNT(*) FROM cards WHERE player = @userid AND deck is true";
+                command.Parameters.AddWithValue("userid", user.UserID);
+                count = (Int64)command.ExecuteScalar();
+                command.Prepare();
+                command.ExecuteNonQuery();
+            }
+            return (count == 4);
+        }
+
+        public void select4CardsForDeck(UserModel user)
+        {
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            {
+                command.CommandText = "UPDATE cards SET deck = true WHERE cardid " +
+                "IN(SELECT cardid FROM cards WHERE player = @userid ORDER BY random() LIMIT 4)";
+
+                command.Parameters.AddWithValue("userid", user.UserID);
+
+                command.Prepare();
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

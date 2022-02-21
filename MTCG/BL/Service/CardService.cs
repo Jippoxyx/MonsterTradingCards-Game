@@ -60,9 +60,14 @@ namespace MTCG.BL.Service
             }
             return false;
         }
-       // public List<CardModel> ShowAcquiredCards()
-        //{
 
-  //      }
+        public bool ConfigureDeck(UserModel user)
+        {
+            if(cardAcc.CheckDeck(user))
+                return false;
+
+            cardAcc.select4CardsForDeck(user);
+            return true;
+        }
     }
 }
