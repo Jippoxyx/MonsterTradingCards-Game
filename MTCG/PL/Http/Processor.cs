@@ -77,17 +77,21 @@ namespace MTCG.Http
             try
             {
                 var inst = Activator.CreateInstance(pathClass, req);
+
                 var meth = getMethodOfType(pathClass, req.Method);
                 response = (Response)(meth.Invoke(inst, null));
+                return response;
             }
-            catch(NullReferenceException)
+            catch (ArgumentNullException)
             {
-                return null;
-            }                  
-            return response;
+                response.Content = "Coudnt find path";
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return response;
+            }
+         
         }
-      
-        public Type getPathOfRequest()
+
+            public Type getPathOfRequest()
         {
             // types must have unique names not case sensitive
             return Assembly.GetExecutingAssembly().GetTypes()

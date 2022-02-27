@@ -155,5 +155,46 @@ namespace MTCG.DAL.Access
                 command.ExecuteNonQuery();
             }
         }
+
+        public List<CardModel> GetFullDeck(UserModel user)
+        {
+            List<CardModel> deck = new List<CardModel>();
+            try
+            {
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "SELECT cardid, cardname, damage, elements, type FROM cards WHERE deck is true AND player = @userid";
+                    command.Parameters.AddWithValue("userid", user.UserID);
+
+                    NpgsqlDataReader reader = command.ExecuteReader();
+
+                    string cardid = "";
+                    string cardname= "";
+                    int damage = 0;
+                    int element = 0;
+                    int type = 0;                               
+
+                    while (reader.Read())
+                    {
+                        cardid = reader.GetString(0);
+                        cardname = reader.GetString(1);
+                        damage = reader.GetInt32(2);
+                        element = reader.GetInt32(3);
+                        type = reader.GetInt32(4);
+
+                        deck.Add(new CardModel(cardid, cardname, damage, (CardType)type,(Elements) element));
+                    }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            return deck;
+        }
     }
 }

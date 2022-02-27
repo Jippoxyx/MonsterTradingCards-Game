@@ -12,8 +12,6 @@ namespace MTCG
             Server newServer = new Server(10001);
             newServer.Run();
 
-            Logger log = Logger.Instance;
-
         }
     }
 }

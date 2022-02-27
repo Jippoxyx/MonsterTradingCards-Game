@@ -15,13 +15,14 @@ namespace MTCG.DAL.Access
         {
             using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
             {
-                command.CommandText = "INSERT INTO users (username, password, coins,wins,loses, elo) VALUES (@username, @password, @coins, @wins, @loses, @elo)";
+                command.CommandText = "INSERT INTO users (username, password, coins,wins,loses, elo, games_played) VALUES (@username, @password, @coins, @wins, @loses, @elo, @games_played)";
                 command.Parameters.AddWithValue("username", user.Username);
                 command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
                 command.Parameters.AddWithValue("coins", 20);
                 command.Parameters.AddWithValue("wins", 0);
                 command.Parameters.AddWithValue("loses", 0);
                 command.Parameters.AddWithValue("elo", 100);
+                command.Parameters.AddWithValue("games_played", 0);
 
                 command.Prepare();
                 command.ExecuteNonQuery();
@@ -80,7 +81,7 @@ namespace MTCG.DAL.Access
                 using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
                 {
 
-                    command.CommandText = "SELECT userid, username, coins, wins, loses, elo FROM users WHERE token = @token";
+                    command.CommandText = "SELECT userid, username, coins, wins, loses, elo, games_played FROM users WHERE token = @token";
                     command.Parameters.AddWithValue("@token", token);
 
                     NpgsqlDataReader reader = command.ExecuteReader();
@@ -93,6 +94,7 @@ namespace MTCG.DAL.Access
                     user.Wins = reader.GetInt32(3); ;
                     user.Loses = reader.GetInt32(4);
                     user.Elo = reader.GetInt32(5);
+                    user.GamesPlayed = reader.GetInt32(6);
                 }
             }
             //returns null if token doesnt exist
@@ -149,6 +151,26 @@ namespace MTCG.DAL.Access
                 }
             }
             return scores;
+        }
+
+        public void UpdateUser(UserModel user)
+        {
+            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            {
+                command.CommandText = "UPDATE users SET " +
+                    "username = @username, wins = @wins, loses = @loses, elo = @elo, games_played = @games_played, winloseratio = @winloseratio" +
+                    " WHERE userid = @userid";
+                command.Parameters.AddWithValue("@userid", user.UserID);
+                command.Parameters.AddWithValue("@username", user.Username);
+                command.Parameters.AddWithValue("@wins", user.Wins);
+                command.Parameters.AddWithValue("@loses", user.Loses);
+                command.Parameters.AddWithValue("@elo", user.Elo);
+                command.Parameters.AddWithValue("@games_played", user.GamesPlayed);
+                command.Parameters.AddWithValue("@winloseratio", user.WinLoseRatio);
+
+                command.Prepare();
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

@@ -26,10 +26,15 @@ namespace MTCG.BL.Service
                 Array typeValues = Enum.GetValues(typeof(CardType));
                 foreach (var card in package)
                 {
-                    //get card Type              
-                    card.Type = (CardType)typeValues.GetValue(random.Next(values.Length));
-                    //get random Description
-                    card.Description = GenerateCardDescription(29);                
+                    if (card.Name.Contains("Spell"))
+                    {
+                        card.Type = (int)CardType.Spell;
+                    }
+                    else
+                    {
+                        card.Type = CardType.Monster;
+                    }
+                    card.Description = GenerateCardDescription(20);
                     //get random Element                    
                     card.Element = (Elements)values.GetValue(random.Next(values.Length));
                 }

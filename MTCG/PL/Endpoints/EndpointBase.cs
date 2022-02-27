@@ -1,4 +1,5 @@
-﻿using MTCG.BL.Service;
+﻿using MTCG.BL.Battle;
+using MTCG.BL.Service;
 using MTCG.DAL.Access;
 using MTCG.Http;
 using MTCG.Model;
@@ -19,7 +20,7 @@ namespace MTCG.Endpoint
         protected UserAccess userAcc = new UserAccess();
         protected CardAccess cardAcc = new CardAccess();
 
-        protected UserModel userObj = new UserModel();
+        protected UserModel userObj = new UserModel();       
         
         public virtual Response POST() 
         {
