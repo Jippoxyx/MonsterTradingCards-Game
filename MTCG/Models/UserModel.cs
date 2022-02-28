@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Model
+namespace MTCG.Models
 {
-    class UserModel
+    public class UserModel
     {
         public int UserID { get; set; }
         public string Username { get; set; }

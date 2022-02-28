@@ -1,5 +1,4 @@
 ﻿using MTCG.DAL.Access;
-using MTCG.Model;
 using MTCG.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 
 namespace MTCG.BL.Service
 {
-    class CardService
+    public class CardService
     {
         private Random random = new Random();
         private CardAccess cardAcc = new CardAccess();
@@ -20,7 +19,7 @@ namespace MTCG.BL.Service
 
         public bool CreateCards(List<CardModel> package)
         {
-            if(package != null)
+            if(package != null && package.Count >= 5)
             {
                 Array values = Enum.GetValues(typeof(Elements));
                 Array typeValues = Enum.GetValues(typeof(CardType));
@@ -46,17 +45,20 @@ namespace MTCG.BL.Service
 
         public bool AcquirePackages(UserModel user)
         {
-            //check if at least 5 packages available
-            if(cardAcc.CheckPackagesAvailable())
+            if(user.Coins >= 5)
             {
-                //assign cards to the user
-                cardAcc.GetPackage(user);
-                //user pays 5 coins
-                int currentCoins = user.Coins;
-                currentCoins -= 5;
-                cardAcc.PayCoins(user.Username, currentCoins);
-                return true;
-            }
+                //check if at least 5 packages available
+                if (cardAcc.CheckPackagesAvailable())
+                {
+                    //assign cards to the user
+                    cardAcc.GetPackage(user);
+                    //user pays 5 coins
+                    int currentCoins = user.Coins;
+                    currentCoins -= 5;
+                    cardAcc.PayCoins(user.Username, currentCoins);
+                    return true;
+                }
+            }            
             return false;
         }
 

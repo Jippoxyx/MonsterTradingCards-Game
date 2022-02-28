@@ -1,6 +1,5 @@
 ﻿using MTCG.Endpoint;
 using MTCG.Http;
-using MTCG.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace MTCG.Endpoint
         {
             try
             {
-                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if(userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;

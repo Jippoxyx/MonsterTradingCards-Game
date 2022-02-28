@@ -1,5 +1,5 @@
 ﻿using MTCG.Http;
-using MTCG.Model;
+using MTCG.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace MTCG.Endpoint {
         {
             try
             {
-                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -50,7 +50,7 @@ namespace MTCG.Endpoint {
         {
             try
             {
-                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -89,11 +89,12 @@ namespace MTCG.Endpoint {
             try
             {
                 userObj = JsonSerializer.Deserialize<UserModel>(req.Content);
-                Console.WriteLine(req.Content);
-                userAcc.CreateUser(userObj);
-                Console.WriteLine("New User created");
-                res.StatusCode = (int)HttpStatusCode.Created;
-                res.Content = "New User created";
+                //Console.WriteLine(req.Content);
+                if(userAcc.CreateUser(userObj))
+                {
+                    res.StatusCode = (int)HttpStatusCode.Created;
+                    res.Content = "New User created";
+                }              
             }
             catch (PostgresException)
             {

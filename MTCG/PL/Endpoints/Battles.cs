@@ -1,6 +1,7 @@
 ﻿using MTCG.BL.Battle;
 using MTCG.Http;
-using MTCG.Model;
+using MTCG.Models;
+using System;
 using System.Collections.Generic;
 
 namespace MTCG.Endpoint
@@ -11,6 +12,7 @@ namespace MTCG.Endpoint
         private static List<UserModel> instance = null;
         private static readonly object singletonLock = new object();
 
+        //thread safe
         public static List<UserModel> Instance
         {
             get
@@ -33,39 +35,35 @@ namespace MTCG.Endpoint
 
         public override Response POST()
         {
-            //try
-            //{
-
-            if(Instance.Count < 2)
+            try
             {
-                Instance.Add(userAcc.Authorizationen(req.Headers["Authorization"]));
-
-                if (Instance.Count == 2)
+                if (Instance.Count < 2)
                 {
-                    List<string> battleLog = new List<string>();
+                    Instance.Add(userAcc.Authorization(req.Headers["Authorization"]));
 
-                    GameLogic gameLogic = new GameLogic(Instance[0], Instance[1]);
-                    battleLog = gameLogic.StartGame();
-
-                    res.StatusCode = (int)HttpStatusCode.OK; ;
-                    for (int i = 0; i < battleLog.Count; i++)
+                    if (Instance.Count == 2)
                     {
-                        res.Content += battleLog[i] + "\n";
+                        List<string> battleLog = new List<string>();
+
+                        GameLogic gameLogic = new GameLogic(Instance[0], Instance[1]);
+                        battleLog = gameLogic.StartGame();
+
+                        res.StatusCode = (int)HttpStatusCode.OK; ;
+                        for (int i = 0; i < battleLog.Count; i++)
+                        {
+                            res.Content += battleLog[i] + "\n";
+                        }
+                        Instance.Clear();
                     }
                 }
             }
-   
-            /*}
-
             catch (Exception)
             {
-                Console.WriteLine("Something went wrong");
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
-                res.Content = "Something went wrong";
+                res.Content = "Coudnt start game";
                 return res;
-            }*/
+            }
             return res;
         }
-
     }
 }

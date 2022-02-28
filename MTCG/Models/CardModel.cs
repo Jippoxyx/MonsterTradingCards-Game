@@ -11,7 +11,7 @@
         Spell = 0, 
       Monster = 1,
     }
-    class CardModel
+    public class CardModel
     {
         public string Id { get; set; }
         public string Name{ get; set; }

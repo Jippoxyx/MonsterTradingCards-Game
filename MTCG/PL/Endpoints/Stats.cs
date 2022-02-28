@@ -16,7 +16,7 @@ namespace MTCG.Endpoint
         {
             try
             {
-                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -26,9 +26,10 @@ namespace MTCG.Endpoint
 
                 List<Object> stats = new List<object>();
                 stats = userServ.GetStats(userObj);
+                userServ.GetWinLoseRatio(userObj);
                 res.StatusCode = (int)HttpStatusCode.OK;
 
-                for (int i = 0; i < stats.Count; i++)
+                for (int i = 0; i < stats.Count + 1; i++)
                 {
                     if(i == 0)
                     {
@@ -38,7 +39,11 @@ namespace MTCG.Endpoint
                     {
                         res.Content += "loses: " + stats[i] + "\n";
                     }
-                    else
+                    else if(i == 3)
+                    {
+                        res.Content += "WinLoseRation: " + userObj.WinLoseRatio + "\n";
+                    }
+                    else if(i == 2)
                     {
                         res.Content += "elo: " + stats[i] + "\n";
                     }                  

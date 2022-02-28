@@ -1,32 +1,44 @@
 ﻿using MTCG.DAL.Database;
-using MTCG.Model;
+using MTCG.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 
 namespace MTCG.DAL.Access
 {
-    class UserAccess
+    public class UserAccess
     {
         Postgres db = new Postgres();
 
         //Registration
-        public void CreateUser(UserModel user)
+        public bool CreateUser(UserModel user)
         {
-            using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+            try
             {
-                command.CommandText = "INSERT INTO users (username, password, coins,wins,loses, elo, games_played) VALUES (@username, @password, @coins, @wins, @loses, @elo, @games_played)";
-                command.Parameters.AddWithValue("username", user.Username);
-                command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
-                command.Parameters.AddWithValue("coins", 20);
-                command.Parameters.AddWithValue("wins", 0);
-                command.Parameters.AddWithValue("loses", 0);
-                command.Parameters.AddWithValue("elo", 100);
-                command.Parameters.AddWithValue("games_played", 0);
+                using (NpgsqlCommand command = db.CreateConnection().CreateCommand())
+                {
+                    command.CommandText = "INSERT INTO users (username, password, coins,wins,loses, elo, games_played) VALUES (@username, @password, @coins, @wins, @loses, @elo, @games_played)";
+                    command.Parameters.AddWithValue("username", user.Username);
+                    command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(user.Password));
+                    command.Parameters.AddWithValue("coins", 20);
+                    command.Parameters.AddWithValue("wins", 0);
+                    command.Parameters.AddWithValue("loses", 0);
+                    command.Parameters.AddWithValue("elo", 100);
+                    command.Parameters.AddWithValue("games_played", 0);
 
-                command.Prepare();
-                command.ExecuteNonQuery();
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+                }
             }
+            catch (NullReferenceException)
+            {
+                return false;
+            }
+            catch (PostgresException)
+            {
+                return false;
+            }
+            return true;
         }
 
         public UserModel GetUserByName(string username)
@@ -73,7 +85,7 @@ namespace MTCG.DAL.Access
             }
         }
 
-        public UserModel Authorizationen(string token)
+        public UserModel Authorization(string token)
         {
             UserModel user = new UserModel();
             try

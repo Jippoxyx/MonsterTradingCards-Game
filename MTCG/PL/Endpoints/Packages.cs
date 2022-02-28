@@ -1,6 +1,5 @@
 ﻿
 using MTCG.Http;
-using MTCG.Model;
 using MTCG.Models;
 using Newtonsoft.Json;
 using Npgsql;

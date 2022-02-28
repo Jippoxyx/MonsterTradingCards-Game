@@ -1,5 +1,4 @@
 ﻿using MTCG.DAL.Database;
-using MTCG.Model;
 using MTCG.Models;
 using Npgsql;
 using System;

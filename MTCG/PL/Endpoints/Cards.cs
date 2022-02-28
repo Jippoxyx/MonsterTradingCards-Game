@@ -19,7 +19,7 @@ namespace MTCG.Endpoint
         {
             try
             {
-                userObj = userAcc.Authorizationen(req.Headers["Authorization"]);
+                userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
                     res.StatusCode = (int)HttpStatusCode.Unauthorized;

@@ -2,7 +2,6 @@
 using MTCG.BL.Service;
 using MTCG.DAL.Access;
 using MTCG.Http;
-using MTCG.Model;
 using MTCG.Models;
 
 namespace MTCG.Endpoint

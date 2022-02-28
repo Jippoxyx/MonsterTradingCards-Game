@@ -1,5 +1,5 @@
 ﻿using MTCG.DAL.Access;
-using MTCG.Model;
+using MTCG.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace MTCG.BL.Service
 {
-    class UserService
+    public class UserService
     {
         private UserAccess userAcc = new UserAccess();
         public string CreateToken(UserModel user)
@@ -30,9 +30,10 @@ namespace MTCG.BL.Service
             return false;
         }
 
-        public void GetWinLoseRatio(UserModel user)
+        public int GetWinLoseRatio(UserModel user)
         {
             user.WinLoseRatio = user.Wins / user.Loses;
+            return user.WinLoseRatio;
         }
 
         public string GetUserProfile(UserModel user)

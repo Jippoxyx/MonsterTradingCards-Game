@@ -1,5 +1,5 @@
 ﻿using MTCG.Http;
-using MTCG.Model;
+using MTCG.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
