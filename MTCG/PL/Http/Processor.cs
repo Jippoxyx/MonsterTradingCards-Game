@@ -53,7 +53,7 @@ namespace MTCG.Http
             }
             SplitPath(req.Path);
             Console.WriteLine(req.Path);
-            if (req.Headers.ContainsKey("Content-Length"))
+           if (req.Headers.ContainsKey("Content-Length"))
             {
                 string contentLength;
                 req.Headers.TryGetValue("Content-Length", out contentLength);
@@ -65,7 +65,7 @@ namespace MTCG.Http
                     string content_string = new(buffer);
                     req.Content = content_string;                                      
                 }                   
-            }
+            } 
             res = ProcessContent(req);
             res.sendResponse(writer);
         }
@@ -91,7 +91,7 @@ namespace MTCG.Http
          
         }
 
-            public Type getPathOfRequest()
+        public Type getPathOfRequest()
         {
             // types must have unique names not case sensitive
             return Assembly.GetExecutingAssembly().GetTypes()

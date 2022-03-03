@@ -32,8 +32,12 @@ namespace MTCG.BL.Service
 
         public int GetWinLoseRatio(UserModel user)
         {
-            user.WinLoseRatio = user.Wins / user.Loses;
-            return user.WinLoseRatio;
+            if(user.Loses == 0)
+            {
+                return 0;
+            }
+            int WinLoseRatio = user.Wins / user.Loses;
+            return WinLoseRatio;
         }
 
         public string GetUserProfile(UserModel user)

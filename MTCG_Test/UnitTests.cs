@@ -175,7 +175,7 @@ namespace MTCG_Test
 
             //ACT
             userObj = userAcc.GetUserByName(player_1.Username);
-
+            userObj.Coins += 10;
             //ASSERT
             Assert.IsTrue(cardServ.AcquirePackages(userObj));
         }
@@ -189,7 +189,7 @@ namespace MTCG_Test
 
             //ACT
             userObj = userAcc.GetUserByName(player_1.Username);
-            userObj.Coins -= 18;
+            userObj.Coins = 3;
 
             //ASSERT
             Assert.IsFalse(cardServ.AcquirePackages(userObj));

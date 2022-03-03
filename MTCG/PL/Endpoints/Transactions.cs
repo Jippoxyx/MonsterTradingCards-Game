@@ -18,7 +18,7 @@ namespace MTCG.Endpoint
         //acquire packages 
         public override Response POST()
         {
-            try
+           try
             {
                 userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if(userObj == null)
@@ -39,6 +39,12 @@ namespace MTCG.Endpoint
                     res.Content = "Acquireing packages was successful!";
                     return res;
                 }
+                else if(!cardServ.AcquirePackages(userObj))
+                {
+                res.StatusCode = (int)HttpStatusCode.Forbidden;
+                res.Content = "Error, User has not enough money";
+                return res;
+                }
                 else
                 {
                     res.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -51,7 +57,7 @@ namespace MTCG.Endpoint
                 Console.WriteLine("Uppsii something went wrong");
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
                 res.Content = "Error";
-            }          
+            }        
             return res;
         }
     }

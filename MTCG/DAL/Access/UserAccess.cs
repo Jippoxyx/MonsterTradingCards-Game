@@ -29,6 +29,7 @@ namespace MTCG.DAL.Access
                     command.Prepare();
                     command.ExecuteNonQuery();
                 }
+                db.Dispose();
             }
             catch (NullReferenceException)
             {
@@ -60,6 +61,7 @@ namespace MTCG.DAL.Access
                     user.Password = reader.GetString(2);
                     user.Coins = reader.GetInt32(3);
                 }
+                db.Dispose();
             }
             catch(NullReferenceException)
             {     
@@ -83,6 +85,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
         }
 
         public UserModel Authorization(string token)
@@ -108,6 +111,7 @@ namespace MTCG.DAL.Access
                     user.Elo = reader.GetInt32(5);
                     user.GamesPlayed = reader.GetInt32(6);
                 }
+                db.Dispose();
             }
             //returns null if token doesnt exist
             catch (NullReferenceException)
@@ -136,6 +140,7 @@ namespace MTCG.DAL.Access
                     command.Prepare();
                     command.ExecuteNonQuery();
                 }
+                db.Dispose();
             }
             catch (NullReferenceException)
             {
@@ -162,6 +167,7 @@ namespace MTCG.DAL.Access
                     scores.Add(reader.GetString(0), reader.GetInt32(1));
                 }
             }
+            db.Dispose();
             return scores;
         }
 
@@ -183,6 +189,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
         }
     }
 }

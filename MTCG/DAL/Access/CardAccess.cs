@@ -27,6 +27,7 @@ namespace MTCG.DAL.Access
                     command.Prepare();
                     command.ExecuteNonQuery();
                 }
+                db.Dispose();
             }
         }
 
@@ -41,6 +42,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
         }
 
         public bool CheckPackagesAvailable()
@@ -53,7 +55,8 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
-            return (count > 5);
+            db.Dispose();
+            return (count >= 5);
         }
 
         public void PayCoins(string username, int coins)
@@ -67,6 +70,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
         }
 
         public List<string> GetAcquiredCards(UserModel user)
@@ -86,6 +90,7 @@ namespace MTCG.DAL.Access
                         cards.Add(reader.GetString(0));
                     }
                 }
+                db.Dispose();
             }
             catch (NullReferenceException)
             {
@@ -115,6 +120,7 @@ namespace MTCG.DAL.Access
                         deck.Add(reader.GetString(0));
                     }
                 }
+                db.Dispose();
             }
             catch (NullReferenceException)
             {
@@ -139,6 +145,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
             return (count == 4);
         }
 
@@ -153,6 +160,7 @@ namespace MTCG.DAL.Access
                 command.Prepare();
                 command.ExecuteNonQuery();
             }
+            db.Dispose();
         }
 
         public List<CardModel> GetFullDeck(UserModel user)
@@ -184,6 +192,7 @@ namespace MTCG.DAL.Access
                         deck.Add(new CardModel(cardid, cardname, damage, (CardType)type,(Elements) element));
                     }
                 }
+                db.Dispose();
             }
             catch (NullReferenceException)
             {

@@ -48,8 +48,8 @@ namespace MTCG.Endpoint {
         //change user profile
         public override Response PUT()
         {
-            try
-            {
+           // try
+            //{
                 userObj = userAcc.Authorization(req.Headers["Authorization"]);
                 if (userObj == null)
                 {
@@ -73,13 +73,13 @@ namespace MTCG.Endpoint {
                     res.StatusCode = (int)HttpStatusCode.OK;
                     res.Content = "Success! User profile updated";
                 }
-            }
-            catch (Exception)
+           // }
+            /*catch (Exception)
             {
                 Console.WriteLine("Something went wrong");
                 res.StatusCode = (int)HttpStatusCode.BadRequest;
                 res.Content = "Something went wrong";
-            }
+            }*/
             return res;
         }
 
@@ -94,7 +94,15 @@ namespace MTCG.Endpoint {
                 {
                     res.StatusCode = (int)HttpStatusCode.Created;
                     res.Content = "New User created";
-                }              
+                    return res;
+                }
+                else
+                {
+                    Console.WriteLine("Username already exist");
+                    res.StatusCode = (int)HttpStatusCode.BadRequest;
+                    res.Content = "Username already exist";
+                    return res;
+                }
             }
             catch (PostgresException)
             {
