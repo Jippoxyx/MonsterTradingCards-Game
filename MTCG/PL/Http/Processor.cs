@@ -94,8 +94,8 @@ namespace MTCG.Http
         public Type getPathOfRequest()
         {
             // types must have unique names not case sensitive
-            return Assembly.GetExecutingAssembly().GetTypes()
-                .FirstOrDefault(t => t.Name.ToLower() == req.Path.Trim().Replace("/", "").ToLower());
+            return Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name.ToLower() 
+            == req.Path.Trim().Replace("/", "").ToLower());
         }
 
         public MethodInfo getMethodOfType(Type type, string method)
